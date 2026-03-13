@@ -9,7 +9,7 @@ source "${SCRIPT_DIR}/config.sh"
 
 # ─── Job Identity — change these for every new run ────────────────────────────
 WORKLOAD_NAME="qwen3-lustre-run-001"     # unique per job
-RUN_NAME="qwen3-v6e-lustre-optimized"
+RUN_NAME="101vish"
 
 # ─── Model Configuration ──────────────────────────────────────────────────────
 # qwen3-8b: model_name=qwen3-8b, tokenizer Qwen/Qwen2.5-7B, layers ~32

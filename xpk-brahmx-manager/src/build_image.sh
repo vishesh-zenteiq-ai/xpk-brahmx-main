@@ -37,9 +37,10 @@ if [[ ! -d "${MAXTEXT_DIR}" ]]; then
   exit 1
 fi
 
+# maxtext moved deps under src/ (was dependencies/ at root)
 docker build \
   -t "${DOCKER_IMAGE}" \
-  -f "${MAXTEXT_DIR}/dependencies/dockerfiles/maxtext_tpu_dependencies.Dockerfile" \
+  -f "${MAXTEXT_DIR}/src/dependencies/dockerfiles/maxtext_tpu_dependencies.Dockerfile" \
   "${MAXTEXT_DIR}"
 
 # ─── Step 4: Push the image ───────────────────────────────────────────────────
