@@ -59,6 +59,10 @@ if [[ "${HF_ACCESS_TOKEN}" == "YOUR_HUGGINGFACE_TOKEN" ]]; then
   echo "ERROR: HF_ACCESS_TOKEN is not set. Please update it in src/job_submit.sh before running."
   exit 1
 fi
+if [[ -z "${CLUSTER_NAME:-}" ]]; then
+  echo "ERROR: CLUSTER_NAME is not set. Source src/config.sh or run: bash src/job_submit.sh"
+  exit 1
+fi
 
 echo "==> Submitting workload '${WORKLOAD_NAME}' to cluster '${CLUSTER_NAME}'"
 echo "    Model  : ${MODEL_NAME}"
@@ -70,6 +74,7 @@ xpk workload create \
   --cluster "${CLUSTER_NAME}" \
   --workload "${WORKLOAD_NAME}" \
   --tpu-type="${TPU_TYPE}" \
+  --num-slices=1 \
   --reservation="${RESERVATION_NAME}" \
   --project="${PROJECT_ID}" \
   --zone="${ZONE}" \

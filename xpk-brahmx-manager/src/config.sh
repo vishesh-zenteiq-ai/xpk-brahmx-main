@@ -10,8 +10,8 @@ export REGION="asia-south1"
 export ZONE="asia-south1-b"
 
 # ─── Cluster ──────────────────────────────────────────────────────────────────
-# use a unique name so you dont collide with other peoples clusters
-export CLUSTER_NAME="brahmx-v6e-cluster"
+# must match the cluster created by setup.sh / run.sh (e.g. vish, brahmx-v6e-cluster)
+export CLUSTER_NAME="vish"
 export RESERVATION_NAME="ghostlite-pod-l35bufasa705n"
 export TPU_TYPE="v6e-16"
 export NETWORK_NAME="zenteiq-tpu-vpc"

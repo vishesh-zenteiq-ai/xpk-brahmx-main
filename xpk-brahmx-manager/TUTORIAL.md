@@ -1,6 +1,6 @@
 # Qwen 3 8B Pre-training on XPK + MaxText + Lustre
 
-Tutorial for running distributed pre-training on TPU v6e with Lustre storage. Uses cluster name `brahmx-v6e-cluster` so you dont collide with others. If something fails, check the Debug section at the bottom.
+Tutorial for running distributed pre-training on TPU v6e with Lustre storage. Set `CLUSTER_NAME` in config to match the cluster created by setup/run.sh. If something fails, check the Debug section at the bottom.
 
 ## Prereqs
 
@@ -89,9 +89,10 @@ Data must live at `/lustre-data/data/english_dclm/` (or whatever path you set in
 **A. Sync from GCS** - run a one-off job that copies from your GCS bucket into Lustre, e.g.:
 
 ```bash
+source src/config.sh
 # example: if you have c4 or similar in gs://your-bucket/
 xpk workload create \
-  --cluster brahmx-v6e-cluster \
+  --cluster ${CLUSTER_NAME} \
   --workload data-sync \
   --tpu-type=v6e-16 \
   --num-slices=1 \
@@ -121,8 +122,9 @@ bash src/job_submit.sh
 ## Step 8: Monitor
 
 ```bash
-# list workloads
-xpk workload list --cluster brahmx-v6e-cluster --project ${PROJECT_ID} --zone ${ZONE}
+# list workloads (source config first if using variables)
+source src/config.sh
+xpk workload list --cluster ${CLUSTER_NAME} --project ${PROJECT_ID} --zone ${ZONE}
 
 # get head pod and tail logs
 POD_NAME=$(kubectl get pods -l xpk.google.com/workload=YOUR_WORKLOAD_NAME,batch.kubernetes.io/job-completion-index=0 -o name | head -n 1)
@@ -168,14 +170,30 @@ If Lustre or GKE cant reach each other, confirm:
 
 `build_image.sh` uses `REGION` for the repo. If your image is in a different region, update `DOCKER_IMAGE` in config.sh to match (e.g. us-central1 vs asia-south1).
 
+### "argument --cluster: expected one argument"
+
+You ran the xpk command without sourcing config. Either:
+
+```bash
+bash src/job_submit.sh
+```
+
+or, for manual commands:
+
+```bash
+source src/config.sh
+# then run your xpk workload create ...
+```
+
 ### Cleanup
 
 ```bash
+source src/config.sh
 # delete workload
-xpk workload delete --workload YOUR_WORKLOAD_NAME --cluster brahmx-v6e-cluster --project ${PROJECT_ID} --zone ${ZONE}
+xpk workload delete --workload YOUR_WORKLOAD_NAME --cluster ${CLUSTER_NAME} --project ${PROJECT_ID} --zone ${ZONE}
 
 # delete cluster
-xpk cluster delete --cluster=brahmx-v6e-cluster --project=${PROJECT_ID} --zone=${ZONE}
+xpk cluster delete --cluster=${CLUSTER_NAME} --project=${PROJECT_ID} --zone=${ZONE}
 ```
 
 Lustre instance and data persist. Delete separately if needed:
